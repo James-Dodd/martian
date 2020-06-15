@@ -6,7 +6,8 @@ let direax = ["Y", "X", "Y", "X"];
 let direcd = [100, 100,  -100, -100];
 let startx = 1;
 let starty = 1;
-inst = "R";
+let insstep = 0;
+inst = "RFRFRFRF"
 
 function setup() {
   createCanvas(1000,1000);
@@ -64,7 +65,7 @@ function draw() {
   background(1000,1000,1000);
   drgrid();
   bot1.display();
-  bot1.movero("E");
+  bot1.movero(inst[insstep++]);
 }
 
 class Robot{
@@ -78,7 +79,10 @@ class Robot{
   movero(inst) {
     this.direction = (inst == "R") ? (this.direction = (this.direction === 3) ? (this.direction = 0) : (this.direction = this.direction+1)) :(this.direction);
     this.direction = (inst == "L") ? (this.direction = (this.direction === 0) ? (this.direction = 3) : (this.direction = this.direction-1)) :(this.direction);
-    
+    if (inst == "F") {
+    this.x = (direax[this.direction] == "X") ? (this.x =(direcd[this.direction] === 100) ? (this.x = this.x + 100) : (this.x = this.x -100)) : (this.x);
+    this.y = (direax[this.direction] == "Y") ? (this.y =(direcd[this.direction] === 100) ? (this.y = this.y + 100) : (this.y = this.y -100)) : (this.y);
+    }
     console.log(this.direction);
   }
 
