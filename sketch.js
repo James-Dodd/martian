@@ -1,11 +1,16 @@
 let xcd = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 let ycd = [1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 0];
-let direc = ["N", "E", "S", "W"]
+//            N    E    S    W
+//            0    1    2    3
+let direax = ["Y", "X", "Y", "X"];
+let direcd = [100, 100,  -100, -100];
 let startx = 1;
 let starty = 1;
+inst = "R";
 
 function setup() {
   createCanvas(1000,1000);
+  frameRate(1);
   // input = createInput();
   // input.position(1300, 65);
 
@@ -53,10 +58,13 @@ function drgrid() {
   }
 }
 
+
+
 function draw() {
   background(1000,1000,1000);
   drgrid();
   bot1.display();
+  bot1.movero("E");
 }
 
 class Robot{
@@ -65,8 +73,15 @@ class Robot{
     this.y = (grid(starty, "Y"));
     this.diameter = (20,20);
     this.fill = random(100,200)
-    this.direction = "E";
+    this.direction = 1;
   }
+  movero(inst) {
+    this.direction = (inst == "R") ? (this.direction = (this.direction === 3) ? (this.direction = 0) : (this.direction = this.direction+1)) :(this.direction);
+    this.direction = (inst == "L") ? (this.direction = (this.direction === 0) ? (this.direction = 3) : (this.direction = this.direction-1)) :(this.direction);
+    
+    console.log(this.direction);
+  }
+
   display(){
     ellipse(this.x, this.y, this.diameter, this.diameter);
   }
