@@ -1,16 +1,22 @@
-let xcd = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
-let ycd = [1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 0];
+let xcd = [];
+let ycd = [];
+Xsize = 50;
+Ysize = 50;
 //            N    E    S    W
 //            0    1    2    3
 let direax = ["Y", "X", "Y", "X"];
 let direcd = [100, 100,  -100, -100];
-let startx = 1;
-let starty = 1;
-inst = "R";
+let insstep = 0;
+let startx = 0;
+let starty = 3;
+let startdir = 3;
+inst = ["L", "L", "F", "F", "F", "L", "F", "L", "F", "L"];
 
 function setup() {
-  createCanvas(1000,1000);
-  frameRate(1);
+  grid1 = new grid(Xsize, Ysize);
+
+  
+
   // input = createInput();
   // input.position(1300, 65);
 
@@ -23,7 +29,9 @@ function setup() {
 
   // textAlign(CENTER);
   // textSize(50);
-  bot1 = new Robot(startx, starty);
+  createCanvas(1000,1000);
+  frameRate(1);
+  bot1 = new Robot(startx, starty, startdir);
 }
 
 // function greet() {
@@ -36,7 +44,7 @@ function setup() {
 //   console.log('you are typing: ', this.value());
 // }
 
-function grid(cord,axis) {
+function gridcal(cord,axis) {
   if (axis == "Y"){
     position = ycd[cord];
     console.log(position);
@@ -50,9 +58,9 @@ function grid(cord,axis) {
 }
 
 function drgrid() {
-  for (var x = 100; x <= width; x += 100) {
+  for (var x = grid1.canx; x <= width; x += grid1.canx) {
     line(x, 0, x, height);
-    for (var y = 100; y <= height; y += 100) {
+    for (var y = grid1.cany; y <= height; y += grid1.cany) {
       line(0, y, width, y);
     }
   }
@@ -60,29 +68,52 @@ function drgrid() {
 
 
 
+
+
 function draw() {
   background(1000,1000,1000);
   drgrid();
   bot1.display();
-  bot1.movero("E");
+  bot1.movero(inst[insstep++]);
 }
 
 class Robot{
-  constructor(startx, starty){
-    this.x = (grid(startx, "X"));
-    this.y = (grid(starty, "Y"));
+  constructor(startx, starty, startdir){
+    this.x = (gridcal(startx, "X"));
+    this.y = (gridcal(starty, "Y"));
     this.diameter = (20,20);
     this.fill = random(100,200)
-    this.direction = 1;
+    this.direction = startdir;
   }
   movero(inst) {
     this.direction = (inst == "R") ? (this.direction = (this.direction === 3) ? (this.direction = 0) : (this.direction = this.direction+1)) :(this.direction);
     this.direction = (inst == "L") ? (this.direction = (this.direction === 0) ? (this.direction = 3) : (this.direction = this.direction-1)) :(this.direction);
-    
-    console.log(this.direction);
+    if (inst == "F") {
+    this.x = (direax[this.direction] == "X") ? (this.x =(direcd[this.direction] === 100) ? (this.x = this.x + 100) : (this.x = this.x -100)) : (this.x);
+    this.y = (direax[this.direction] == "Y") ? (this.y =(direcd[this.direction] === 100) ? (this.y = this.y + 100) : (this.y = this.y -100)) : (this.y);
+    console.log(this.x, this.y);
+    }
   }
 
   display(){
     ellipse(this.x, this.y, this.diameter, this.diameter);
+  }
+}
+
+class grid{
+  constructor(Xsize, Ysize){
+    this.canx = (1000/Xsize);
+    this.cany = (1000/Ysize);
+  }
+
+  buildx(xcd){
+    for (var x = this.canx; x <= width; x += this.canx) {
+      append(xcd, x);
+    }
+  }
+  buildy(ycd){
+    for (var y = this.cany; y <= height; y += this.cany) {
+      append(ycd, y);
+    }
   }
 }
